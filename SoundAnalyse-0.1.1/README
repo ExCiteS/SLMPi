@@ -1,0 +1,134 @@
+=SoundAnalyse=
+==Analyse sound chunks, realtime pitch detection==
+
+Copyright 2008, Nathan Whitehead
+Released under the LGPL
+
+This module provides functions to analyse sound chunks to detect
+loudness and pitch.  It also includes some utility functions for
+converting midi note numbers to and from frequencies.  Designed for
+realtime microphone input for singing games.
+
+
+==REQUIREMENTS==
+
+Working C compiler compatible with your python installation
+
+NumPy 1.0 (or more recent)
+http://numpy.scipy.org/
+
+
+==DOWNLOAD==
+
+A source distribution is available at PyPI:
+http://pypi.python.org/pypi/SoundAnalyse
+
+
+==INSTALLATION==
+
+SoundAnalyse is packaged as Python and C source using distutils.  To
+install, run the following command as root:
+
+python setup.py install
+
+For more information and options about using distutils, read:
+http://docs.python.org/inst/inst.html
+
+Because this package needs a C compiler, you may need to tweak some
+flags to get things to work.  Take a look at this section:
+http://docs.python.org/inst/tweak-flags.html
+
+
+==DOCUMENTATION==
+
+This README file along with the pydoc documentation in the doc/
+directory are the documentation for SoundAnalyse.
+
+
+==EXAMPLES==
+
+The package is imported with 'import analyse'.
+
+To use this package you first need a sound source.  Lets get sound
+data from the microphone using PyAudio:
+http://people.csail.mit.edu/hubert/pyaudio/
+
+Other audio libraries or techniques should also work.  The important
+thing is to convert the sound data into a NumPy 16-bit mono array.
+
+Here is an example that shows the loudness and musical pitch detection
+functions:
+
+{{{
+import numpy
+import pyaudio
+import analyse
+
+# Initialize PyAudio
+pyaud = pyaudio.PyAudio()
+
+# Open input stream, 16-bit mono at 44100 Hz
+# On my system, device 2 is a USB microphone, your number may differ.
+stream = pyaud.open(
+    format = pyaudio.paInt16,
+    channels = 1,
+    rate = 44100,
+    input_device_index = 2,
+    input = True)
+
+while True:
+    # Read raw microphone data
+    rawsamps = stream.read(1024)
+    # Convert raw data to NumPy array
+    samps = numpy.fromstring(rawsamps, dtype=numpy.int16)
+    # Show the volume and pitch
+    print analyse.loudness(samps), analyse.musical_detect_pitch(samps)
+}}}
+
+The return value for loudness is in decibels.  The range is 0dB for
+the maximally loud sounds down to -40dB for silence.  Typical very
+loud sounds are -1dB and typical silence is -36dB.
+
+For the pitch detection, the return value of musical_detect_pitch
+is a midi note number.  Middle C is 60.  The return value will either
+be None or a floating point number that represents a pitch.  For example,
+a return value of 60.5 is half a semitone above middle C.
+
+There is also a version of the pitch detection function, detect_pitch,
+that returns the pitch in Hz.  Both musical_detect_pitch and detect_pitch
+take several extra arguments to control their behavior.  For pitch detection
+in human singing range for data sampled at 44100 Hz, the default values
+for these extra keyword arguments should work without modification.  
+
+A good size chunk for pitch detection is 1024 samples.  Larger chunks
+return pitches that are more precise, but you will get fewer results
+in a given time interval with larger chunks.  This means larger chunks
+cannot track changing pitches as well.  Smaller chunks can quickly track
+changing pitches but yield less precise pitches.  Smaller chunks cannot
+recognize lower pitches.
+
+
+==HOW IT WORKS==
+
+Loudness is a simple power calculation using a root-mean-squared operation.
+
+Pitch detection uses Average Magnitude Difference Function (AMDF).  The idea
+is to compare windows of data of the same length but offset by some number
+of samples.  For each offset calculate the average absolute value difference
+of the samples.  Pick the offset that gives the smallest average difference.
+This offset is the period, invert to get the frequency of the detected pitch.
+
+There are some subtleties.  There will actually be many dips in the
+amdf graph.  We want the first big dip.  Later big dips are harmonics
+of the fundamental frequency.
+
+
+==BUGS AND LIMITATIONS==
+
+Pitch detection is not perfect, especially for sss and shhh sounds.
+Some singers get wrong octave with some styles of singing.
+
+Low-level code is fast but may not be realtime for very slow computers.
+
+Pitch detection only works for single sources, does not work on polyphonic
+sounds.

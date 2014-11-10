@@ -1,0 +1,98 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module analyse</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>analyse</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/nwhitehe/Projects/pygalaxy/SoundAnalyse/analyse.py">/home/nwhitehe/Projects/pygalaxy/SoundAnalyse/analyse.py</a></font></td></tr></table>
+    <p><tt>Analyse&nbsp;sound&nbsp;chunks<br>
+&nbsp;<br>
+Analyse&nbsp;sound&nbsp;chunks&nbsp;to&nbsp;detect&nbsp;loudness&nbsp;and&nbsp;pitch.&nbsp;&nbsp;Also&nbsp;includes&nbsp;some<br>
+utility&nbsp;functions&nbsp;for&nbsp;converting&nbsp;midi&nbsp;note&nbsp;numbers&nbsp;to&nbsp;and&nbsp;from<br>
+frequencies.&nbsp;&nbsp;Designed&nbsp;for&nbsp;realtime&nbsp;microphone&nbsp;input&nbsp;for&nbsp;singing<br>
+games.<br>
+&nbsp;<br>
+Copyright&nbsp;2008,&nbsp;Nathan&nbsp;Whitehead<br>
+Released&nbsp;under&nbsp;the&nbsp;LGPL</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="analyseffi.html">analyseffi</a><br>
+</td><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-detect_pitch"><strong>detect_pitch</strong></a>(chunk, min_frequency<font color="#909090">=82.0</font>, max_frequency<font color="#909090">=1000.0</font>, samplerate<font color="#909090">=44100.0</font>, sens<font color="#909090">=0.10000000000000001</font>, ratio<font color="#909090">=5.0</font>)</dt><dd><tt>Return&nbsp;the&nbsp;pitch&nbsp;present&nbsp;in&nbsp;a&nbsp;chunk&nbsp;of&nbsp;sampled&nbsp;sound<br>
+&nbsp;<br>
+The&nbsp;chunk&nbsp;should&nbsp;be&nbsp;a&nbsp;numpy&nbsp;array&nbsp;of&nbsp;samples&nbsp;from&nbsp;the&nbsp;soundcard,<br>
+in&nbsp;16-bit&nbsp;mono&nbsp;format.&nbsp;&nbsp;The&nbsp;return&nbsp;value&nbsp;will&nbsp;either&nbsp;be&nbsp;None&nbsp;if&nbsp;no<br>
+pitch&nbsp;could&nbsp;be&nbsp;detected,&nbsp;or&nbsp;a&nbsp;frequency&nbsp;in&nbsp;Hz&nbsp;if&nbsp;a&nbsp;pitch&nbsp;was<br>
+detected.&nbsp;&nbsp;The&nbsp;chunk&nbsp;should&nbsp;be&nbsp;at&nbsp;least&nbsp;1024&nbsp;bytes&nbsp;long&nbsp;for<br>
+accurate&nbsp;pitch&nbsp;detection&nbsp;of&nbsp;lower&nbsp;frequencies.<br>
+&nbsp;<br>
+Human&nbsp;vocal&nbsp;range&nbsp;is&nbsp;from&nbsp;about&nbsp;E2&nbsp;to&nbsp;C6.&nbsp;This&nbsp;corresponds&nbsp;to<br>
+frequencies&nbsp;of&nbsp;approx&nbsp;82-1000&nbsp;Hz.&nbsp;&nbsp;Middle&nbsp;C&nbsp;is&nbsp;C4&nbsp;at&nbsp;261.6&nbsp;Hz.<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+min_frequency&nbsp;-&nbsp;minimum&nbsp;frequency&nbsp;to&nbsp;detect&nbsp;(default:&nbsp;82.0)<br>
+max_frequency&nbsp;-&nbsp;maximum&nbsp;frequency&nbsp;to&nbsp;detect&nbsp;(default:&nbsp;1000.0)<br>
+samplerate&nbsp;-&nbsp;sampling&nbsp;frequency&nbsp;of&nbsp;input&nbsp;(Hz)&nbsp;(default:&nbsp;44100.0)<br>
+sens&nbsp;-&nbsp;tuning&nbsp;parameter&nbsp;to&nbsp;avoid&nbsp;octave&nbsp;skipping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(should&nbsp;be&nbsp;between&nbsp;0.0&nbsp;and&nbsp;1.0,&nbsp;default:&nbsp;0.1)<br>
+ratio&nbsp;-&nbsp;how&nbsp;good&nbsp;detected&nbsp;pitch&nbsp;much&nbsp;be&nbsp;before&nbsp;being&nbsp;accepted,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;higher&nbsp;numbers&nbsp;are&nbsp;more&nbsp;stringent&nbsp;(default:&nbsp;5.0)</tt></dd></dl>
+ <dl><dt><a name="-loudness"><strong>loudness</strong></a>(chunk)</dt><dd><tt>Calculate&nbsp;and&nbsp;return&nbsp;volume&nbsp;of&nbsp;input&nbsp;samples<br>
+&nbsp;<br>
+Input&nbsp;chunk&nbsp;should&nbsp;be&nbsp;a&nbsp;numpy&nbsp;array&nbsp;of&nbsp;samples&nbsp;for&nbsp;analysis,&nbsp;as<br>
+returned&nbsp;by&nbsp;sound&nbsp;card.&nbsp;&nbsp;Sound&nbsp;card&nbsp;should&nbsp;be&nbsp;in&nbsp;16-bit&nbsp;mono&nbsp;mode.<br>
+Return&nbsp;value&nbsp;is&nbsp;measured&nbsp;in&nbsp;dB,&nbsp;will&nbsp;be&nbsp;from&nbsp;0dB&nbsp;(maximum<br>
+loudness)&nbsp;down&nbsp;to&nbsp;-80dB&nbsp;(no&nbsp;sound).&nbsp;&nbsp;Typical&nbsp;very&nbsp;loud&nbsp;sound&nbsp;will<br>
+be&nbsp;-1dB,&nbsp;typical&nbsp;silence&nbsp;is&nbsp;-36dB.</tt></dd></dl>
+ <dl><dt><a name="-midinum_from_pitch"><strong>midinum_from_pitch</strong></a>(freq)</dt><dd><tt>Return&nbsp;midi&nbsp;note&nbsp;number&nbsp;from&nbsp;pitch<br>
+&nbsp;<br>
+Midi&nbsp;note&nbsp;numbers&nbsp;go&nbsp;from&nbsp;0-127,&nbsp;middle&nbsp;C&nbsp;is&nbsp;60.&nbsp;&nbsp;Given&nbsp;a&nbsp;frequency<br>
+in&nbsp;Hz,&nbsp;this&nbsp;function&nbsp;computes&nbsp;the&nbsp;midi&nbsp;note&nbsp;number&nbsp;corresponding&nbsp;to<br>
+that&nbsp;frequency.&nbsp;&nbsp;The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;floating&nbsp;point&nbsp;number.</tt></dd></dl>
+ <dl><dt><a name="-musical_detect_pitch"><strong>musical_detect_pitch</strong></a>(chunk, min_note<font color="#909090">=40.0</font>, max_note<font color="#909090">=84.0</font>, samplerate<font color="#909090">=44100</font>, sens<font color="#909090">=0.10000000000000001</font>, ratio<font color="#909090">=5.0</font>, smooth<font color="#909090">=1.0</font>)</dt><dd><tt>Return&nbsp;the&nbsp;pitch&nbsp;present&nbsp;in&nbsp;a&nbsp;chunk&nbsp;of&nbsp;sampled&nbsp;sound<br>
+&nbsp;<br>
+The&nbsp;chunk&nbsp;should&nbsp;be&nbsp;a&nbsp;numpy&nbsp;array&nbsp;of&nbsp;samples&nbsp;from&nbsp;the&nbsp;soundcard,<br>
+in&nbsp;16-bit&nbsp;mono&nbsp;format.&nbsp;&nbsp;The&nbsp;return&nbsp;value&nbsp;will&nbsp;either&nbsp;be&nbsp;None&nbsp;if&nbsp;no<br>
+pitch&nbsp;could&nbsp;be&nbsp;detected,&nbsp;or&nbsp;a&nbsp;midi&nbsp;note&nbsp;number&nbsp;if&nbsp;a&nbsp;pitch&nbsp;was<br>
+detected.&nbsp;&nbsp;The&nbsp;chunk&nbsp;should&nbsp;be&nbsp;at&nbsp;least&nbsp;1024&nbsp;bytes&nbsp;long&nbsp;for<br>
+accurate&nbsp;pitch&nbsp;detection&nbsp;of&nbsp;lower&nbsp;frequencies.&nbsp;&nbsp;The&nbsp;return&nbsp;value<br>
+will&nbsp;be&nbsp;a&nbsp;floating&nbsp;point&nbsp;number,&nbsp;e.g.&nbsp;60.5&nbsp;is&nbsp;half&nbsp;a&nbsp;semitone<br>
+above&nbsp;middle&nbsp;C&nbsp;(60).<br>
+&nbsp;<br>
+Human&nbsp;vocal&nbsp;range&nbsp;is&nbsp;from&nbsp;about&nbsp;40&nbsp;(E2)&nbsp;to&nbsp;83&nbsp;(C6).&nbsp;This<br>
+corresponds&nbsp;to&nbsp;frequencies&nbsp;of&nbsp;approx&nbsp;82-1000&nbsp;Hz.&nbsp;&nbsp;Middle&nbsp;C&nbsp;is&nbsp;60<br>
+(C4).<br>
+&nbsp;<br>
+Keyword&nbsp;arguments:<br>
+min_note&nbsp;-&nbsp;minimum&nbsp;midi&nbsp;note&nbsp;to&nbsp;detect&nbsp;(default:&nbsp;40)<br>
+max_note&nbsp;-&nbsp;maximum&nbsp;frequency&nbsp;to&nbsp;detect&nbsp;(default:&nbsp;83)<br>
+samplerate&nbsp;-&nbsp;sampling&nbsp;frequency&nbsp;of&nbsp;input&nbsp;(Hz)&nbsp;(default:&nbsp;44100.0)<br>
+sens&nbsp;-&nbsp;tuning&nbsp;parameter&nbsp;to&nbsp;avoid&nbsp;octave&nbsp;skipping<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(should&nbsp;be&nbsp;between&nbsp;0.0&nbsp;and&nbsp;1.0,&nbsp;default:&nbsp;0.1)<br>
+ratio&nbsp;-&nbsp;how&nbsp;good&nbsp;detected&nbsp;pitch&nbsp;much&nbsp;be&nbsp;before&nbsp;being&nbsp;accepted,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;higher&nbsp;numbers&nbsp;are&nbsp;more&nbsp;stringent&nbsp;(default:&nbsp;5.0)<br>
+smooth&nbsp;-&nbsp;how&nbsp;much&nbsp;to&nbsp;smooth&nbsp;output&nbsp;(default:&nbsp;1.0)</tt></dd></dl>
+ <dl><dt><a name="-pitch_from_midinum"><strong>pitch_from_midinum</strong></a>(m)</dt><dd><tt>Return&nbsp;pitch&nbsp;of&nbsp;midi&nbsp;note&nbsp;number<br>
+&nbsp;<br>
+Midi&nbsp;note&nbsp;numbers&nbsp;go&nbsp;from&nbsp;0-127,&nbsp;middle&nbsp;C&nbsp;is&nbsp;60.&nbsp;&nbsp;Given&nbsp;a&nbsp;note&nbsp;number<br>
+this&nbsp;function&nbsp;computes&nbsp;the&nbsp;frequency.&nbsp;&nbsp;The&nbsp;return&nbsp;value&nbsp;is&nbsp;a&nbsp;floating<br>
+point&nbsp;number.</tt></dd></dl>
+</td></tr></table>
+</body></html>

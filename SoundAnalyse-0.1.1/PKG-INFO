@@ -1,0 +1,15 @@
+Metadata-Version: 1.0
+Name: SoundAnalyse
+Version: 0.1.1
+Summary: Analyse sound chunks for pitch and loudness
+Home-page: http://code.google.com/p/pygalaxy/
+Author: Nathan Whitehead
+Author-email: nwhitehe@gmail.com
+License: UNKNOWN
+Description: 
+        This module provides functions to analyse sound chunks to detect
+        loudness and pitch.  It also includes some utility functions for
+        converting midi note numbers to and from frequencies.  Designed for
+        realtime microphone input for singing games.
+        
+Platform: UNKNOWN
