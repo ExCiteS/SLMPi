@@ -1,0 +1,3 @@
+[submodule "pyaudio"]
+	path = pyaudio
+	url = http://people.csail.mit.edu/hubert/git/pyaudio.git
